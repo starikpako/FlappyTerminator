@@ -1,17 +1,18 @@
+using System;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class Terminator : MonoBehaviour
 {
+    public event Action Died;
+
     public void Die()
     {
-        Debug.Log("Терминатор погиб!");
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        Died?.Invoke();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.GetComponent<Enemy>() != null)
+        if (collision.gameObject.TryGetComponent(out Enemy enemy))
         {
             Die();
         }
@@ -19,7 +20,7 @@ public class Terminator : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.GetComponent<Enemy>() != null)
+        if (collision.TryGetComponent(out Enemy enemy))
         {
             Die();
         }

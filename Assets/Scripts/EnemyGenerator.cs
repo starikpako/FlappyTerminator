@@ -1,33 +1,43 @@
+using System;
 using UnityEngine;
-using System.Collections;
 
 public class EnemyGenerator : MonoBehaviour
 {
-    [SerializeField] private GameObject _enemyPrefab;
-    [SerializeField] private float _delay = 2f;    
-    [SerializeField] private float _minSpawnY = -3f;  
-    [SerializeField] private float _maxSpawnY = 3f; 
+    [SerializeField] private Enemy _enemyPrefab;
+    [SerializeField] private float _spawnDelay = 2f;
 
-    private void Start()
+    public event Action<Enemy> EnemySpawned;
+
+    private float _timer;
+
+    private void Update()
     {
-        StartCoroutine(SpawnRoutine());
+        _timer += Time.deltaTime;
+
+        if (_timer >= _spawnDelay)
+        {
+            _timer = 0f;
+            Spawn();
+        }
     }
 
-    private IEnumerator SpawnRoutine()
+    public void DestroyEnemy(Enemy enemy)
     {
-        while (true)
+        if (enemy != null)
         {
-            Spawn();
-            yield return new WaitForSeconds(_delay);
+            Destroy(enemy.gameObject);
         }
     }
 
     private void Spawn()
     {
-        float randomY = Random.Range(_minSpawnY, _maxSpawnY);
+        if (_enemyPrefab != null)
+        {
+            Vector3 spawnPosition = new Vector3(10f, UnityEngine.Random.Range(-4f, 4f), 0f);
+            Enemy spawnedEnemy = Instantiate(_enemyPrefab, spawnPosition, Quaternion.identity);
 
-        Vector3 spawnPosition = new Vector3(transform.position.x, randomY, transform.position.z);
 
-        Instantiate(_enemyPrefab, spawnPosition, Quaternion.identity);
+            EnemySpawned?.Invoke(spawnedEnemy);
+        }
     }
 }

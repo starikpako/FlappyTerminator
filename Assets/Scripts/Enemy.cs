@@ -1,12 +1,15 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
     [SerializeField] private float _speed = 3f;
-    [SerializeField] private GameObject _bulletPrefab;
-    [SerializeField] private Transform _shootPoint; 
-    [SerializeField] private float _shootDelay = 2f;
+    [SerializeField] private Bullet _bulletPrefab;
+    [SerializeField] private Transform _shootPoint;
+    [SerializeField] private float _shootDelay = 0.5f;
+
+    public event Action<Enemy> Died;
 
     private void Start()
     {
@@ -18,12 +21,16 @@ public class Enemy : MonoBehaviour
         transform.Translate(Vector2.left * _speed * Time.deltaTime);
     }
 
+    public void Die()
+    {
+        Died?.Invoke(this);
+    }
+
     private IEnumerator ShootRoutine()
     {
         while (true)
         {
             yield return new WaitForSeconds(_shootDelay);
-
             Shoot();
         }
     }
@@ -33,22 +40,9 @@ public class Enemy : MonoBehaviour
         if (_bulletPrefab != null)
         {
             Vector3 spawnPos = _shootPoint != null ? _shootPoint.position : transform.position;
+            Bullet bulletInstance = Instantiate(_bulletPrefab, spawnPos, Quaternion.identity);
 
-            GameObject bulletObj = Instantiate(_bulletPrefab, spawnPos, Quaternion.identity);
-
-            if (bulletObj.TryGetComponent(out Bullet bulletScript))
-            {
-                bulletScript.Initialize(Vector2.left, false);
-            }
+            bulletInstance.Initialize(Vector2.left, false);
         }
-    }
-
-    public void Die()
-    {
-        if (ScoreManager.Instance != null)
-        {
-            ScoreManager.Instance.AddPoint();
-        }
-        Destroy(gameObject);
     }
 }

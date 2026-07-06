@@ -108,7 +108,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
   _speed: 3
-  _bulletPrefab: {fileID: 2938700823041493286, guid: 386b12010bf10fa46a2cf1dc28556fd3, type: 3}
+  _bulletPrefab: {fileID: 1217138645297758542, guid: 386b12010bf10fa46a2cf1dc28556fd3, type: 3}
   _shootPoint: {fileID: 0}
   _shootDelay: 1
 --- !u!61 &4772766918336466134

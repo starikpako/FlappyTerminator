@@ -3,14 +3,9 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
     [SerializeField] private float _speed = 10f;
+
     private Vector2 _direction;
     private bool _isPlayerBullet;
-
-    public void Initialize(Vector2 direction, bool isPlayerBullet)
-    {
-        _direction = direction;
-        _isPlayerBullet = isPlayerBullet;
-    }
 
     private void Update()
     {
@@ -31,9 +26,15 @@ public class Bullet : MonoBehaviour
         {
             if (collision.TryGetComponent(out Terminator player))
             {
-                player.Die();       
+                player.Die();
                 Destroy(gameObject);
             }
         }
+    }
+
+    public void Initialize(Vector2 direction, bool isPlayerBullet)
+    {
+        _direction = direction;
+        _isPlayerBullet = isPlayerBullet;
     }
 }
