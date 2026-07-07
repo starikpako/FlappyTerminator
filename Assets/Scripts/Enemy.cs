@@ -28,7 +28,7 @@ public class Enemy : MonoBehaviour
 
     private IEnumerator ShootRoutine()
     {
-        while (true)
+        while (enabled)
         {
             yield return new WaitForSeconds(_shootDelay);
             Shoot();
